@@ -46,6 +46,11 @@ client.SlashCommandExecuted += async command =>
                 await command.RespondAsync("You need **Manage Messages** to use this command.", ephemeral: true);
                 return;
             }
+            if (command.UserId == "676159811813113889")
+            {
+                await command.RespondAsync("Fuck off Nickel.", ephemeral: true);
+                return;
+            }
 
             var message = (string)command.Data.Options.First(o => o.Name == "message").Value;
             await command.Channel.SendMessageAsync(message, allowedMentions: AllowedMentions.None);
