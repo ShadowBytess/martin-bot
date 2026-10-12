@@ -46,9 +46,9 @@ client.SlashCommandExecuted += async command =>
                 await command.RespondAsync("You need **Manage Messages** to use this command.", ephemeral: true);
                 return;
             }
-            if (command.user.Id == "676159811813113889")
+            if (command.User.Id == 676159811813113889UL)
             {
-                await command.RespondAsync("Fuck off Nickel.", ephemeral: true);
+                await command.RespondAsync(InteractionCallback.Message("Fuck off Nickel.", MessageFlags.Ephemeral));
                 return;
             }
 
@@ -76,11 +76,11 @@ client.SlashCommandExecuted += async command =>
     }
 };
 
-public async Task ReactionHandlers()
-{
-    _client.ReactionAdded += HandleReactionAddedAsync;
-    _client.ReactionRemoved += HandleReactionRemovedAsync;
-}
+//async Task ReactionHandlers()
+//{
+//    _client.ReactionAdded += HandleReactionAddedAsync;
+//    _client.ReactionRemoved += HandleReactionRemovedAsync;
+//}
 
 await client.LoginAsync(TokenType.Bot, token);
 await client.StartAsync();

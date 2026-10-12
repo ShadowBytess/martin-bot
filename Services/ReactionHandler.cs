@@ -5,7 +5,7 @@ using Microsoft.Data.Sqlite;
 
 namespace ShinBreaker.Services;
 
-public static class RoleHandler
+public class RoleHandler
 {
 
     private async Task HandleReactionAddedAsync(
@@ -18,8 +18,7 @@ public static class RoleHandler
         var channel = await cachedChannel.GetOrDownloadAsync();
         var message = await cachedMessage.GetOrDownloadAsync();
 
-        if (/* Case check here */)
-        {
+        if ( true /* Case check here */ ) {
             /* Role operation here */
         }
     }
@@ -29,9 +28,8 @@ public static class RoleHandler
         Cacheable<IMessageChannel, ulong> cachedChannel,
         SocketReaction reaction)
     {
-        if (/* Case check here */)
-            {
+        if ( true /* Case check here */ ) {
                 /* Role operation here */
-            }
+        }
     }
 }

@@ -6,7 +6,7 @@ public sealed record reactionRole(
     long Id,
     ulong GuildId,
     string[] Roles,
-    string[] Emojis;
+    string[] Emojis);
 
 public sealed class ReactionRoleDatabase
 {
