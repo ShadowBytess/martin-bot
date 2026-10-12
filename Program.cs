@@ -17,7 +17,7 @@ await database.InitializeAsync();
 
 var client = new DiscordSocketClient(new DiscordSocketConfig
 {
-    GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages,
+    GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions,
     LogLevel = LogSeverity.Info
 });
 var logger = new ModerationLogger(database);
@@ -75,6 +75,12 @@ client.SlashCommandExecuted += async command =>
             await command.RespondAsync("Something went wrong while running that command. Check the bot logs.", ephemeral: true);
     }
 };
+
+public async Task ReactionHandlers()
+{
+    _client.ReactionAdded += HandleReactionAddedAsync;
+    _client.ReactionRemoved += HandleReactionRemovedAsync;
+}
 
 await client.LoginAsync(TokenType.Bot, token);
 await client.StartAsync();
