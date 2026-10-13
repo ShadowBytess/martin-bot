@@ -48,7 +48,7 @@ client.SlashCommandExecuted += async command =>
             }
             if (command.User.Id == 676159811813113889UL)
             {
-                await command.RespondAsync(InteractionCallback.Message("Fuck off Nickel.", MessageFlags.Ephemeral));
+                await command.RespondAsync("Fuck off Nickel.", ephemeral: true);
                 return;
             }
 
