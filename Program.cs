@@ -76,11 +76,8 @@ client.SlashCommandExecuted += async command =>
     }
 };
 
-//async Task ReactionHandlers()
-//{
-//    _client.ReactionAdded += HandleReactionAddedAsync;
-//    _client.ReactionRemoved += HandleReactionRemovedAsync;
-//}
+client.ReactionAdded += ReactionHandler.HandleReactionAdded;
+client.ReactionRemoved += ReactionHandler.HandleReactionRemoved;
 
 await client.LoginAsync(TokenType.Bot, token);
 await client.StartAsync();
