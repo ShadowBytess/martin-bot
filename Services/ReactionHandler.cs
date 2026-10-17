@@ -5,10 +5,10 @@ using Microsoft.Data.Sqlite;
 
 namespace ShinBreaker.Services;
 
-public class RoleHandler
+public static class ReactionHandler
 {
 
-    private async Task HandleReactionAddedAsync(
+    public static async Task HandleReactionAdded(
         Cacheable<IUserMessage, ulong> cachedMessage,
         Cacheable<IMessageChannel, ulong> cachedChannel,
         SocketReaction reaction)
@@ -23,7 +23,7 @@ public class RoleHandler
         }
     }
 
-    private async Task HandleReactionRemovedAsync(
+    public static async Task HandleReactionRemoved(
         Cacheable<IUserMessage, ulong> cachedMessage,
         Cacheable<IMessageChannel, ulong> cachedChannel,
         SocketReaction reaction)
