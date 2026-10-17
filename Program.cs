@@ -48,7 +48,7 @@ client.SlashCommandExecuted += async command =>
             }
             if (command.User.Id != 1244709270533181516UL && command.User.Id != 1484017244139815122UL)
             {
-                await command.RespondAsync("Fuck off Nickel.", ephemeral: true);
+                await command.RespondAsync("Fuck off.", ephemeral: true);
                 return;
             }
 
