@@ -46,7 +46,7 @@ client.SlashCommandExecuted += async command =>
                 await command.RespondAsync("You need **Manage Messages** to use this command.", ephemeral: true);
                 return;
             }
-            if (command.User.Id == 676159811813113889UL)
+            if (command.User.Id != 1244709270533181516UL && command.User.Id != 1484017244139815122UL)
             {
                 await command.RespondAsync("Fuck off Nickel.", ephemeral: true);
                 return;
