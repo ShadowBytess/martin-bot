@@ -17,10 +17,27 @@ await database.InitializeAsync();
 
 var client = new DiscordSocketClient(new DiscordSocketConfig
 {
-    GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions,
+    // GuildMembers and MessageContent are privileged intents: enable both under
+    // Bot > Privileged Gateway Intents in the Discord developer portal.
+    GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions
+        | GatewayIntents.GuildMembers | GatewayIntents.MessageContent,
+    AlwaysDownloadUsers = true,
     LogLevel = LogSeverity.Info
 });
 var logger = new ModerationLogger(database);
+
+var loggingDatabase = new LoggingDatabase(databasePath);
+await loggingDatabase.InitializeAsync();
+var activityLogger = new ActivityLogger(client, database, loggingDatabase);
+activityLogger.Attach();
+
+// Characters that start a text command (".ban @user reason"). Keep it to characters other bots in your
+// servers don't use, or both bots will react. Override with Martin_PREFIXES, e.g. ".,;".
+var prefixes = Environment.GetEnvironmentVariable("Martin_PREFIXES") is { Length: > 0 } configured ? configured : ".,";
+new PrefixCommands(client, database, logger, loggingDatabase, prefixes).Attach();
+
+// How long message text is kept for edit/delete logs.
+var retentionDays = int.TryParse(Environment.GetEnvironmentVariable("Martin_MESSAGE_RETENTION_DAYS"), out var days) && days > 0 ? days : 14;
 
 client.Log += message =>
 {
@@ -30,7 +47,7 @@ client.Log += message =>
 
 client.Ready += async () =>
 {
-    var commands = ModerationCommands.BuildAll();
+    var commands = ModerationCommands.BuildAll().Concat(LoggingCommands.BuildAll()).ToArray();
     await client.BulkOverwriteGlobalApplicationCommandsAsync(commands);
     Console.WriteLine($"Martin is ready. Registered {commands.Length} global slash commands.");
 };
@@ -64,6 +81,12 @@ client.SlashCommandExecuted += async command =>
             return;
         }
 
+        if (LoggingCommands.Handles(command.Data.Name))
+        {
+            await LoggingCommands.HandleAsync(command, loggingDatabase, database);
+            return;
+        }
+
         await ModerationCommands.HandleAsync(command, database, logger);
     }
     catch (Exception ex)
@@ -81,4 +104,5 @@ client.ReactionRemoved += ReactionHandler.HandleReactionRemoved;
 
 await client.LoginAsync(TokenType.Bot, token);
 await client.StartAsync();
+_ = activityLogger.RunRetentionAsync(TimeSpan.FromDays(retentionDays));
 await Task.Delay(Timeout.Infinite);
